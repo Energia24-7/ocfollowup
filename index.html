@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Seguimiento de órdenes</title>
+  <style>
+    .top-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+}
+.top-button:hover {
+  background-color: #218838;
+}
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f4f4f4;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    header img {
+      height: 60px;
+      margin-right: 20px;
+    }
+    h1, h2 {
+      margin: 0;
+    }
+    .button-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .button-card {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .button-card button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .button-card button:hover {
+      background-color: #0056b3;
+    }
+    .meta-info {
+      margin-top: 10px;
+      font-size: 0.9em;
+    }
+    footer {
+  margin-top: 50px;
+  text-align: center;
+  font-size: 0.9em;
+  color: #555;
+  width: 100%;
+}
+
+  </style>
+</head>
+<body>
+
+  <header>
+  <div style="display: flex; align-items: center; width: 100%; justify-content: space-between;">
+    <div style="display: flex; align-items: center;">
+      <img src="https://www.siselec.ec/wp-content/uploads/2018/01/logo_webfront.png" alt="Logo">
+      <div>
+        <h1>Proyecto de subestaciones Auca Sur y Culebra / Petroecuador</h1>
+        <h2>Seguimiento de ordenes de compra</h2>
+      </div>
+    </div>
+    <button id="cronogramaButton" class="top-button" onclick="window.open('URL_TO_YOUR_CRONOGRAMA_PAGE.html', '_blank')">
+  Cronograma gant:</button>
+  </div>
+  </header>
+
+  <div class="button-container" id="buttons"></div>
+
+  <script>
+    document.getElementById('cronogramaButton').onclick = function() {
+  window.open('URL_TO_YOUR_CRONOGRAMA_PAGE_HERE', '_blank');
+}
+
+    async function loadSheetData() {
+      const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS02bk6uRdj_2dTHpr-Iy0tnsrWajGP-ZAn0mlFJo93uMn39Ee3SINJRfD0UiIUphtcD-wneGIaKm1t/pub?output=csv"; // <-- Replace this
+      const response = await fetch(csvUrl);
+      const data = await response.text();
+      const rows = data.split('\n').slice(1); // Skip header
+
+      const container = document.getElementById('buttons');
+
+      rows.forEach(row => 
+        {
+        const [name, url, estado, proveedor, monto] = row.split(',');
+
+        const card = document.createElement('div');
+        card.className = 'button-card';
+
+        const button = document.createElement('button');
+        button.textContent = name;
+        button.onclick = () => window.open(url, '_blank');
+
+        const estadoText = document.createElement('div');
+        estadoText.className = 'meta-info';
+        estadoText.textContent = `Estado: ${estado}`;
+
+        const proveedorText = document.createElement('div');
+        proveedorText.className = 'meta-info';
+        proveedorText.textContent = `Proveedor: ${proveedor}`;
+
+        const montoText = document.createElement('div');
+        montoText.className = 'meta-info';
+        montoText.textContent = `Monto USD: ${monto}`;
+
+        card.appendChild(button);
+        card.appendChild(estadoText);
+        card.appendChild(proveedorText);
+        card.appendChild(montoText);
+        container.appendChild(card);
+      });
+    }
+
+    loadSheetData();
+  </script>
+  <footer>
+  Mantenido por: Andres Cuadrado - <a href="mailto:acuadrado@siselec.ec">acuadrado@siselec.ec</a>
+</footer>
+</body>
+</html>
+
